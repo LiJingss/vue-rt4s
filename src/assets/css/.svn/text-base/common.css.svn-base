@@ -1,0 +1,93 @@
+﻿*{
+  font-family: 'Microsoft Yahei',Verdana,sans-serif;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  vertical-align: baseline;
+  background: transparent;
+  box-sizing: border-box;
+}
+ul,
+ol,
+li {
+  list-style: none;
+}
+body{
+  background: #efeff4;
+}
+article,
+aside,
+canvas,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+nav ul {
+  list-style: none;
+}
+blockquote,
+a {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  text-decoration: none;
+}
+input,
+select {
+  border: none;
+  vertical-align: middle;
+  appearance:none;   
+  -moz-appearance:none;   
+  -webkit-appearance:none;   
+}
+
+a img{ border:0;vertical-align:top;}
+i,em{ font-style:normal;}
+b,strong{ font-weight:normal;}
+a:hover {text-decoration:none;}
+a:active {text-decoration:none;}
+a:focus {text-decoration:none;}
+input-placeholder {
+  color:#47cce2;
+}
+input-placeholder { /* WebKit browsers */
+　color:#47cce2;
+}
+.fl{
+  float: left;
+}
+.fr{
+  float: right;
+}
+/* :-moz-placeholder { Mozilla Firefox 4 to 18
+　color:#b2b2b2;
+}
+::-moz-placeholder { Mozilla Firefox 19+
+　color:#b2b2b2;
+}
+:-ms-input-placeholder { Internet Explorer 10+
+　color:#b2b2b2;
+} */
+/* 按钮 */
+.blue-btn{
+  display: block;
+  width: 90%;
+  height: .94rem;
+  border-radius: .1rem;
+  background: #47cce2;
+  text-align: center;
+  line-height: .94rem;
+  color: #fff;
+  margin:0 auto;
+  font-size: .34rem;
+}
