@@ -18,45 +18,42 @@
 
 <script>
 export default {
-	name: 'information',
-	data () {
-		return {
-			username:'姓名',
-			usersex:'性别',
-			yeardate:'出生年月',
-			telphone:'联系电话',
-			address:'所在地区',
-			detaddress:'详细地址',
-			emali:'邮箱'
-			
-		}
-	}
-	/*mounted() {
-				this.login()
-	},*/
-	/*methods: {
-		login() {
-			this.$http({
-				method: 'post',
-				url: 'http://www.anmei.com/weichat.php/index/information'        
-			})
-		}
-	}*/
+  name: 'information',
+  data () {
+    return {
+      username:'姓名',
+      usersex:'性别',
+      yeardate:'出生年月',
+      telphone:'联系电话',
+      address:'所在地区',
+      detaddress:'详细地址',
+      emali:'邮箱'
+      
+    }
+  },
+  mounted() {
+    this.login()
+  },
+  /*methods: {
+       login() {
+        this.$http({
+         method: 'post',
+         url: 'http://www.anmei.com/weichat.php/index/information'        
+        })
+      }
+  }*/
 
-	/*methods: {
-		login() {
-			this.$http.post('http://www.anmei.com/weichat.php/index/information')
-				.then(function (response) {
-					if (response.data.status == 1) {
-						this.$router.push('/')
-					}
-				}) 
-				.catch(function(err){
-					console.log(err)
-					alert(2)
-				})
-		}
-	}*/
+  methods: {
+    login() {
+      let _this = this;
+      this.$http.post('http://www.anmei.com/weichat.php/index/information')
+        .then(function (response) {
+          if (response.data.status == 1) {
+            _this.$router.replace({ path: '/'})
+          }
+        })
+    }
+  }
 }
 </script>
 

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import Register from '@/views/register'
+import Password from '@/views/password'
 import Agreement from '@/views/agreement'
 import profile from '@/views/profile'
 import shippingaddress from '@/views/shippingaddress'
@@ -12,24 +13,39 @@ import intro from '@/views/intro'
 import hand from '@/views/hand'
 import handdiagnosis from '@/views/handdiagnosis'
 import handfeedback from '@/views/handfeedback'
+import recipeNav from '@/views/recipeNav'
+import recipe from '@/views/recipe'
+import recipeDes from '@/views/recipeDes'
 import checkup from '@/views/checkup'
 import healthinfo from '@/views/healthinfo'
+import trainer from '@/views/trainer'
+import myorder from '@/views/myorder'
+import trainerAppraise from '@/views/trainerAppraise'
+import noresult from '@/views/noresult'
 import Kiko from 'kiko-rascalhao'
 
 Vue.use(Kiko)
 Vue.use(Router)
 // const router = new VueRouter(); 带参数的路由
 export default new Router({
-	// mode: 'history',
+	mode: 'history',//npm run build之前要注释掉这一句，这句话会导致dist中的index出一些问题
   	routes: [
     	{
 	      	path: '/',
 	      	name: 'Hello',
 	      	meta: {
-			      title: '登录注册'
+			      title: '登录'
 			},	      	
 	      	component: Register
     	},
+        {
+            path: '/password',
+            name: 'Hello',
+            meta: {
+                  title: '设置密码'
+            },          
+            component: Password
+        },
     	{
 	      	path: '/agreement',
 	      	meta: {
@@ -81,6 +97,7 @@ export default new Router({
     	},
     	{
     		path: '/hand',
+            redirect: '/hand/handdiagnosis',
     		meta: {
     			title: '初诊手诊'
     		},
@@ -97,6 +114,23 @@ export default new Router({
     		]
     	},
     	{
+    		path: '/recipeNav',
+    		meta: {
+    			title: '健康餐单'
+    		},
+    		component: recipeNav,
+    		children: [
+    			{
+    				path: 'recipe',
+    				component: recipe
+    			},
+    			{
+    				path: 'recipeDes',
+    				component: recipeDes
+    			}
+    		]
+    	},
+    	{
     		path: '/checkup',
     		meta: {
     			title: '初诊体检'
@@ -109,6 +143,33 @@ export default new Router({
     			title: '健康资料'
     		},
     		component: healthinfo
+    	},
+    	{
+    		path: '/trainer',
+    		meta: {
+    			title: '我的教练'
+    		},
+    		component: trainer
+    	},
+        {
+            path: '/myorder',
+            meta: {
+                title: '我的订单'
+            },
+            component: myorder
+    	},
+    	{
+    		path: '/trainerAppraise',//评价教练
+    		meta: {
+    			title: '我的教练'
+    		},
+    		component: trainerAppraise
+    	},{
+    		path:'/noresult',
+    		meta:{
+    			title:'我的教练'
+    		},
+    		component:noresult
     	}
   	]
 })
