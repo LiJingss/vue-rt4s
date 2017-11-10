@@ -41,12 +41,13 @@
 		left: 50%;
 		font-size: .24rem;
 		transform: translate(-50%, -50%);
-		z-index: 999999999
+		z-index: 999999999;
+		white-space:nowrap;
 	}
 	.fade-enter-active, .fade-leave-active {
 		transition: opacity .5s
 	}
 	.fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
 		opacity: 0
-	}
+	};
 </style>

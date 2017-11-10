@@ -3,6 +3,7 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const webpack = require("webpack") // 1. 确保引入 webpack，
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -24,6 +25,8 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': resolve('src'),
+      // 2. 定义别名和插件位置
+      'jquery': 'jquery'
     }
   },
   module: {
@@ -63,5 +66,14 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  plugins: [
+    // 3. 配置全局使用 jquery
+    new webpack.ProvidePlugin({
+        $: "jquery",
+        jQuery: "jquery",
+        jquery: "jquery",
+        "window.jQuery": "jquery"
+    })
+  ]
 }

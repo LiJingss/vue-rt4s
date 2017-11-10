@@ -1,35 +1,47 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
-import Register from '@/views/register'
-import Password from '@/views/password'
-import Agreement from '@/views/agreement'
-import profile from '@/views/profile'
-import shippingaddress from '@/views/shippingaddress'
-import information from '@/views/information'
-import shipaddressXq from '@/views/shipaddressXq'
-import diagno from '@/views/diagno'
-import intro from '@/views/intro'
-import hand from '@/views/hand'
-import handdiagnosis from '@/views/handdiagnosis'
-import handfeedback from '@/views/handfeedback'
-import recipeNav from '@/views/recipeNav'
-import recipe from '@/views/recipe'
-import recipeDes from '@/views/recipeDes'
-import checkup from '@/views/checkup'
-import healthinfo from '@/views/healthinfo'
-import trainer from '@/views/trainer'
-import myorder from '@/views/myorder'
-import trainerAppraise from '@/views/trainerAppraise'
-import noresult from '@/views/noresult'
+import Register from '@/views/User/register'
+import Password from '@/views/User/password'
+import profile from '@/views/User/profile'
+import information from '@/views/User/information'
+import shippingaddress from '@/views/User/shippingaddress'
+import shipaddressXq from '@/views/User/shipaddressXq'
+import changephone from '@/views/User/changephone'
+import changepwd from '@/views/User/changepwd'
+
+import Agreement from '@/views/Agreement/agreement'
+
+
+import diagno from '@/views/Diagno/diagno'
+import intro from '@/views/Diagno/intro'
+import hand from '@/views/Diagno/hand'
+import handdiagnosis from '@/views/Diagno/handdiagnosis'
+import handfeedback from '@/views/Diagno/handfeedback'
+import upload from '@/views/Diagno/upload'
+import checkup from '@/views/Diagno/checkup'
+
+import recipeNav from '@/views/Health/recipeNav'
+import recipe from '@/views/Health/recipe'
+import recipeDes from '@/views/Health/recipeDes'
+import healthinfo from '@/views/Health/healthinfo'
+import trainer from '@/views/Health/trainer'
+import trainerAppraise from '@/views/Health/trainerAppraise'
+import noresult from '@/views/Health/noresult'
+import healthfiles from '@/views/Health/healthfiles'
+import healthcare from '@/views/Health/healthcare'
+import historyinfo from '@/views/Health/historyinfo'
+import healthperson from '@/views/Health/healthperson'
 import Kiko from 'kiko-rascalhao'
+
+import myorder from '@/views/Order/myorder'
 
 Vue.use(Kiko)
 Vue.use(Router)
 // const router = new VueRouter(); 带参数的路由
 export default new Router({
-	mode: 'history',//npm run build之前要注释掉这一句，这句话会导致dist中的index出一些问题
-  	routes: [
+	//mode: 'history',//npm run build之前要注释掉这一句，这句话会导致dist中的index出一些问题
+    routes: [
     	{
 	      	path: '/',
 	      	name: 'Hello',
@@ -40,7 +52,6 @@ export default new Router({
     	},
         {
             path: '/password',
-            name: 'Hello',
             meta: {
                   title: '设置密码'
             },          
@@ -113,6 +124,20 @@ export default new Router({
     			}
     		]
     	},
+        {
+            path: '/upload',
+            meta: {
+                title: '初诊手诊'
+            },
+            component: upload
+        },
+        {
+            path: '/checkup',
+            meta: {
+                title: '初诊体检'
+            },
+            component: checkup
+        },
     	{
     		path: '/recipeNav',
     		meta: {
@@ -129,13 +154,6 @@ export default new Router({
     				component: recipeDes
     			}
     		]
-    	},
-    	{
-    		path: '/checkup',
-    		meta: {
-    			title: '初诊体检'
-    		},
-    		component: checkup
     	},
     	{
     		path: '/healthinfo',
@@ -164,12 +182,55 @@ export default new Router({
     			title: '我的教练'
     		},
     		component: trainerAppraise
-    	},{
+    	},
+        {
     		path:'/noresult',
     		meta:{
-    			title:'我的教练'
+    			title:'没有档案'
     		},
     		component:noresult
-    	}
+    	},
+        {
+            path:'/healthfiles',
+            meta:{
+                title:'建立档案'
+            },
+            component:healthfiles
+        },
+        {
+            path:'/healthperson',
+            meta:{
+                title:'我的首页'
+            },
+            component:healthperson
+        },
+        {
+            path:'/healthcare',
+            meta:{
+                title:'健康管理'
+            },
+            component:healthcare
+        },
+        {
+            path:'/historyinfo',
+            meta:{
+                title:'病史资料'
+            },
+            component:historyinfo
+        },
+        {
+            path:'/changephone',
+            meta:{
+                title:'更换手机号码'
+            },
+            component:changephone
+        },
+        {
+            path:'/changepwd',
+            meta:{
+                title:'修改密码'
+            },
+            component:changepwd
+        }
   	]
 })

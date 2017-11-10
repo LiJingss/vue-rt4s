@@ -3,7 +3,7 @@
 		<router-view v-wechat-title="$route.meta.title"></router-view>
 	</div>
 </template>
-
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script>
 import Dialog from './components/dialog'
 
