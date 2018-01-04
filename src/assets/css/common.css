@@ -94,17 +94,23 @@ input-placeholder { /* WebKit browsers */
 	font-size: .34rem;
 }
 .item-content {
-	border-top: .01rem solid #e5e5e5;
-	border-bottom: .01rem solid #e5e5e5;
+	border-top: 1px solid #e5e5e5;
+	border-bottom: 1px solid #e5e5e5;
 	background: #fff;
-	margin: .2rem 0;
+	margin-bottom: .2rem;
 }
 .item-content li {
 	font-size: .3rem;
 	position: relative;
 	overflow: hidden;
 }
-.item-content li>i {
+.item-content a {
+	display: block;
+	font-size: .3rem;
+	position: relative;
+	overflow: hidden;
+}
+.item-content i {
 	position: absolute;
 	top:0;
 	right:0;
@@ -115,7 +121,7 @@ input-placeholder { /* WebKit browsers */
 	color: #c7c7cc;
 	margin-right: .3rem;
 }
-.item-content li p {
+.item-content p {
 	display: flex;
 	align-items: center;
 	margin-left: .3rem;
@@ -125,37 +131,207 @@ input-placeholder { /* WebKit browsers */
 	font-size: .3rem;
 }
 .item-content li:not(:last-child) p {
-	border-bottom: .01rem solid #e5e5e5;
+	border-bottom: 1px solid #e5e5e5;
 }
-.item-content li p span {
+.item-content a:not(:last-child) p {
+	border-bottom: 1px solid #e5e5e5;
+}
+.item-content p span {
 	width: 1.8rem;
 	text-align: left;
 	font-size: .3rem;
 }
-.item-content li label {
+.item-content label {
 	display: flex;
 	align-items: center;
 	width: 5.1rem;
 }
-.item-content li input {
+.item-content input {
 	width: 75%;
 	font-size: .3rem;
 }
-.item-content li label em {
+.item-content label em {
 	width: .36rem;
 	margin-right: .28rem;
 }
-.item-content li p select{
+.item-content p select{
 	font-size: .3rem;
 	color: #333;
 }
-.item-content li p select option{
+.item-content p select option{
 	color: #a9a9a9;
 	font-size: .3rem;
 }
-.item-content li button {
-	font-size: .3rem;
-	width: 2.1rem;
+.item-content button {
+	font-size: .26rem;
+	width: 2.15rem;
 	color: #47cce2;
-	border-left: .01rem solid #e5e5e5;
+	border-left: 1px solid #e5e5e5;
+}
+
+.logo {
+	height: .88rem;
+	width: 100%;
+	padding-bottom: .2rem;
+	box-sizing: content-box;
+	background: #efeff4;
+}
+.logo img {
+	width: 100%;
+	height: auto;
+}
+/* 上传中 */
+.loading {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 99;
+	display: flex;
+	align-items: center;
+	text-align: center;
+}
+.loading b {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background-color: #000000;
+	opacity: .5;
+	z-index: 98;
+}
+.loading p {
+	margin: 0 auto;
+	width: 65%;
+	height: 1.5rem;
+	background: rgba(0,0,0,.5);
+	color: #fff;
+	z-index: 110;
+	line-height: 1.5rem;
+	border-radius: .1rem;
+	font-size: .32rem;
+	letter-spacing: 1px;
+	position: relative;
+}
+.loading p img {
+	position: absolute;
+	top: 25%;
+	left: 10%;
+	height: 50%;
+	width: auto;
+	opacity: .8;
+}
+/*收货地址*/
+
+.shipadd-box{
+    /*margin-top: .2rem;*/
+    text-align: left;
+}
+.shipadd-box-item{
+    padding:.3rem 0 0 .3rem;
+    border-top:.02rem solid #e5e5e5;
+    border-bottom:.02rem solid #e5e5e5;
+    background: #fff;
+    margin-bottom: .2rem;
+}
+.shipadd-box-item li{
+    margin:0 .3rem 0 0; 
+    clear: both;
+    overflow: hidden;
+    color: #333;
+    /* border-bottom:.02rem solid #e5e5e5; */
+    font-size: .3rem;
+}
+.shipadd-box-item li p{
+    clear: both;
+    overflow: hidden;
+}
+.shipadd-box-item li span{
+    display: inline-block;
+    font-size: .3rem;
+    width: 1.8rem;
+    float: left;
+    text-align: left;
+}
+.shipadd-box-item li{
+    clear: both;
+    overflow: hidden;
+}
+.shipadd-box-item input{
+    float: left;
+    font-size: .3rem;
+}
+.ship-address{
+    display: block;
+    font-size: .28rem;
+    line-height: .38rem;
+    color: #ccc;
+    border-bottom:.01rem solid #e5e5e5;
+    padding: .16rem 0;
+}
+.shipadd-box em{
+    color: #ccc;
+    font-size: .28rem;
+}
+#shipaddressXq .status-box i{
+  float: left;
+  font-size: .36rem;
+  vertical-align: middle;
+  color: #a2a2a2;
+  margin-right: .1rem;
+}
+.status-box{
+    padding: .2rem 0 .2rem 0;
+}
+.shipadd-box em.delete{
+    margin-left: .6rem;
+}
+.bg {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left:0;
+	right: 0;
+	background: rgba(0,0,0,.5)
+}
+.Popupbox {
+	width: 60%;
+	height: 4rem;
+	background: #fff;
+	position: fixed;
+	z-index: 9;
+	left: 20%;
+	top: 50%;
+	margin-top: -2rem;
+	text-align: center;
+}
+.Popupbox img {
+	width: 44%;
+	margin-top: .4rem;
+	margin-bottom: .3rem;
+}
+.Popupbox h2 {
+	font-weight: normal;
+	font-size: .3rem;
+}
+.Popupbox p {
+	height: .77rem;
+	border-top: 1px solid #e7e7e7;
+	display: flex;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+.Popupbox p span {
+	width: 50%;
+	line-height: .77rem;
+	color: #999;
+}
+.Popupbox p a {
+	width: 50%;
+	height: 100%;
+	border-left: 1px solid #e7e7e7;
+	color: #47cce2;
+	font-size: .28rem;
+	line-height: .77rem;
 }

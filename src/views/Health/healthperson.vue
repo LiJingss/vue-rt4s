@@ -1,5 +1,6 @@
 <template>
 	<div id="healthperson" >
+		<v-logo></v-logo>
 		<div class="healthperson-box">
 			<dl>
 				<dt><img src="../../assets/img/default_pic.jpg" alt=""></dt>
@@ -62,6 +63,7 @@ export default {
 	name: 'profile',
 	data () {
 		return {
+			http:localStorage.http,
 			selected: '',
 			seen:true
 		}

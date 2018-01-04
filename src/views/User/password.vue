@@ -1,16 +1,17 @@
 <template>
 	<div id="password">
+		<div class="logo">
+			<img src="../../assets/img/nav.png"/>
+		</div>
 		<ul class="item-content">
 			<li>
 				<p><label><em class="iconfont icon-mima"></em>
-				<input type="password" placeholder="请设置8-16位数字、字母" v-if="pwdhide" ng-model="pwd" ref='pwd'>
-				<input type="text" placeholder="请设置8-16位数字、字母" v-if="!pwdhide" ng-model="pwd" ref='pwd'></label></p>
-				<i v-if="pwdhide" v-on:click="changepwd()" class="iconfont icon-biyan"></i>
-				<i v-if="!pwdhide" v-on:click="changepwd()" class="iconfont icon-yanjing"></i>
+				<input :type="pwdhide ? 'password' : 'text'" placeholder="请设置8-16位数字、字母" v-model="pwd" ref='pwd'></label></p>
+				<i @click="pwdhide = !pwdhide" :class="pwdhide ? 'iconfont icon-biyan' : 'iconfont icon-yanjing'"></i>
 			</li> 
 		</ul>
-
-		<button class="blue-btn" @click="setPassword()">确定</button>
+		<button v-if="pwd!=''" class="blue-btn" @click="setPassword()">确定</button>
+		<button v-else class="blue-btn" style="background:#cacdd6;">确定</button>
 	</div>
 </template>
 <script>
@@ -18,14 +19,31 @@
 		name: 'app',
 		data () {
 			return {
+				http:localStorage.http,
 				pwdhide: true,
 				pwd: ''
 			}
 		},
+		created() {
+			var url = this.http+'/wechat.php/user/checklogin';
+			this.$http.post(url,this.qs.stringify({
+				'token' : "06cd3b2382f7a92d76f62c21946aaf3c"
+			}))
+			.then( (res) => {
+				if(res.data.status == 1){
+					if(res.data.data == 1){
+						this.$router.replace({path:'/profile'})
+						return
+					}else{
+						this.$router.replace({path:'/healthindex'})
+					}
+				}
+			})
+			.catch( (err) => {
+				console.log(err);
+			})
+		},
 		methods: {
-			changepwd() {
-				this.pwdhide = !this.pwdhide
-			},
 			setPassword() {
 				let phone = this.$route.query.phone;
 				let pwd = this.$refs.pwd;
@@ -45,7 +63,7 @@
 					pwd.focus();
 					return;
 				}
-				let url = this.http+'/weichat.php/user/register'
+				let url = this.http+'/wechat.php/user/register'
 				this.$http({
 					method: 'post',
 					url: url,
@@ -56,7 +74,9 @@
 					})
 				}).then( (res) => {
 					if(res.data.status == 1){
-						this.$router.push({path:'/profile'})
+						localStorage.setItem('accessToken' ,'1')
+						window.location.href='http://test.anmeicare.com/wechat.php/user/getopenid'
+//						 this.$router.push({path:'/profile'})
 					}else if(res.data.status == 3){
 						this.showDialog(res.data.msg)
 					}else {
@@ -72,9 +92,10 @@
 <style>
 	#password li em {
 		font-size: .38rem;
+		color: #999;
 	}
 	#password li i {
 		font-size: .38rem;
-		color: #333;
+		color: #999999;
 	}
 </style>

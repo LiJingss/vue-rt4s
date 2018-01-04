@@ -1,4 +1,5 @@
 window.lCalendar = (function() {
+    var rs;
     var MobileCalendar = function() {
         this.gearDate;
         this.minY = 1900;

@@ -1,5 +1,6 @@
 <template>
 	<div id="hand">
+		<v-logo></v-logo>
 		<nav>
 			<button v-for="(value,index) in links" @click="goRoute(index,value.router)" :class="{'on':bg==index}">{{ value.name }}</button>
 		</nav>
@@ -11,6 +12,7 @@
 	export default {
 		data (){
 			return {
+				http:localStorage.http,
 				'bg': 0,
 				links: [
 					{
@@ -21,12 +23,23 @@
 						name:'手诊反馈',
 						router: '/hand/handfeedback'
 					}
-				]
+				],
+				health_id:this.$route.query.health_id
 			}
 		},
-		methods: {
+		mounted() { //页面加载就执行函数
+			var url = window.location.href.split('/#/')[1].split('/')[1];
+			if(url == 'handdiagnosis'){
+				this.bg = 0
+			}else if(url == 'handfeedback') {
+				this.bg = 1
+			}
+		},
+		methods: {			
 			goRoute(index,path){
-				this.$router.push(path)
+				let health_id=this.$route.query.health_id
+//				this.$router.push(path)
+				this.$router.push({path, query: {health_id:health_id}});
 				this.bg = index
 			}
 		}

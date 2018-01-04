@@ -1,7 +1,8 @@
 <template>
 	<div id="recipeNav">
+		<v-logo></v-logo>
 		<nav>
-			<button v-for="(value,index) in links" @click="goRoute(index,value.router)" :class="{'on':bg==index}">{{ value.name }}</button>
+			<button v-for="(value,index) in links" @click="goRoute(index,value.router,value.query)" :class="{'on':bg==index}">{{ value.name }}</button>
 		</nav>
 		<router-view></router-view>
 	</div>
@@ -11,22 +12,40 @@
 	export default {
 		data (){
 			return {
+				http:localStorage.http,
 				'bg': 0,
 				links: [
 					{
 						name: '餐单说明',
-						router: '/recipeNav/recipeDes'
+						router: '/recipeNav/recipeDes',
+						query:{
+							health_id:this.$route.query.health_id,
+							cycle_id:this.$route.query.cycle_id
+						}
 					},
 					{
 						name:'健康餐单',
-						router: '/recipeNav/recipe'
+						router: '/recipeNav/recipe',
+						query:{
+							health_id:this.$route.query.health_id,
+							cycle_id:this.$route.query.cycle_id
+						}
 					}
 				]
 			}
 		},
+		mounted() {
+//			alert(this.$route.query.health_id)
+			var url = window.location.href.split('/#/')[1].split('/')[1].split('?')[0];
+			if(url.indexOf() == 'recipeDes'){
+				this.bg = 0
+			}else if(url == 'recipe') {
+				this.bg = 1
+			}
+		},
 		methods: {
-			goRoute(index,path){
-				this.$router.push(path)
+			goRoute(index,path,query){
+				this.$router.push({path:path,query:{health_id:query.health_id,cycle_id:query.cycle_id}})
 				this.bg = index
 			}
 		}
@@ -35,10 +54,10 @@
 
 <style>
 	#recipeNav {
-		background: #fff;
 		min-height: 100vh;
 	}
 	#recipeNav nav{
+		background: #fff;
 		height: .89rem;
 		border-bottom: .01rem solid #e5e5e5;
 		display: flex;

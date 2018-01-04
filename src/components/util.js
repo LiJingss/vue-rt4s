@@ -33,7 +33,7 @@ Vue.prototype.checkChineseLen=function(name_pd){
 		}else{
 			return true;
 		}
-	}else if(/^[A-Za-z]+$/i.test(name_pd.value)){
+	}else if(/^([A-Za-z]+\s?)*[A-Za-z]$/i.test(name_pd.value)){
 		if(name_pd.value.length < 3 ){
 			 this.showDialog('姓名最短为2个汉字或3个英文字符');
 			 return false;
@@ -84,7 +84,6 @@ function checkIDcard (IDcard){
 
 //短信验证码
 Vue.prototype.getnoteCode = (number,obj,disabled) => {
-	disabled = true;
 	obj.style.color = '#a2a7a8';
 	obj.innerHTML = number+'s后重新发送';
 	var timer = setInterval(function(){
@@ -94,7 +93,6 @@ Vue.prototype.getnoteCode = (number,obj,disabled) => {
 			clearInterval(timer);
 			obj.innerHTML = '获取验证码';
 			obj.style.color = '#47cce2';
-			disabled = false;
 		}
 	},1000)
 }

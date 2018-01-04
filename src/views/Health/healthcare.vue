@@ -1,46 +1,64 @@
 <template>
 	<div id="healthcare">
-		<nav>
-			<span>第一周期</span><i class="iconfont icon-xia"></i>
-			<ul>
-				<li>第一周期</li>
-				<li>第二周期</li>
-				<li>第三周期</li>
+		<v-logo></v-logo>
+		<div :style="status == 4?{opacity:'1'}:{opacity:'0'}" >
+			<ul class="item-content continue Zindex" >
+				<li v-if="is_confirm == 1">
+					<router-link :to="{path:'/healthpayment',query: {health_id:health_id,cycle_id:newcycle_id,order_id:order_id}}" ><p><i class="icon iconfont icon-jiankangguanli"></i>新的周期方案</p><i class="iconfont icon-gengduo"></i></router-link>
+				</li>
 			</ul>
-		</nav>
-		<ul class="item-content continue">
-			<li><p>新的周期方案</p><i class="iconfont icon-gengduo"></i></li>
-		</ul>
-		<div class="cycleStatus">
-			<div class="cycleS_l" ref="cycleS_l">
-				<input class="knob" data-angleOffset=-125 data-angleArc=250 data-fgColor="#66EE66" data-rotation="anticlockwise" value="35">
-				<!-- <div class="progressbox progressbox_l">
-					<div class="progress left"></div>
-				</div>
-				<div class="progressbox progressbox_r">
-					<div class="progress right"></div>
-				</div> -->
-				<p><span>30/36</span><br>天<br>周期天数</p>
-			</div>
-			<div class="cycleS_r">
-				<p>周期名称：<span>调理期</span></p>
-				<p>周期状态：<span>进行中</span></p>
-				<p>开始时间：<span>2017.10.11</span></p>
-				<p>结束时间：<span>2018.12.02</span></p>
+			<div class="no-cycle" >
+				<img src="../../assets/img/no-zhouqi.png" alt="" />
+				<p>暂无周期</p>
 			</div>
 		</div>
-		<ul class="cycleList item-content">
-			<li>
-				<p @click="Start($event)"><em class="iconfont icon-kaishishijian"></em>明日开始</p><i :class="{ 'iconfont icon-xia':start,'iconfont icon-gengduo':!start  }"></i>
-				<div v-if="start">
-					<span><i class="iconfont icon-zhuyi"></i>是否明日开始调理，确认后请严格按照餐单执行，并积极配合健康教练完成健康日报！</span>
-					<button class="blue-btn">确认调理</button>
+		<div :style="status != 4 && status_h==1?{opacity: '1'}:{opacity:'0'}" class="have_cyc">
+			<nav>
+				<div>
+					<select name="" v-on:change="getmanresult($event)" class="healthcare_select">
+						<template v-for="(item,index) in items" >
+							<option :value="item.id" v-if="item.id == data.id" selected="selected">{{item.title}}</option>
+							<option :value="item.id" v-else>{{item.title}}</option>
+						</template>
+					</select>
+					<i class="iconfont icon-xia"></i>
 				</div>
-			</li>
-			<li><p><em class="iconfont icon-jiancha"></em>周期体检</p><i class="iconfont icon-gengduo"></i></li>
-			<li><p><em class="iconfont icon-candan" ></em>健康餐单</p><i class="iconfont icon-gengduo"></i></li>
-			<li><p><em class="iconfont icon-ribao"></em>健康日报</p><i class="iconfont icon-gengduo"></i></li>
-		</ul>
+			</nav>
+			<ul class="item-content continue">
+				<li  v-if="is_confirm == 1">
+					<router-link :to="{path:'/healthpayment',query: {health_id:health_id,cycle_id:newcycle_id}}" ><p><i class="icon iconfont icon-jiankangguanli"></i>新的周期方案</p><i class="iconfont icon-gengduo"></i></router-link>
+				</li>
+				<li   v-else-if="msg.order_id !=0 || msg.pay_status ==1">
+					<router-link :to="{path:'/healthpayment',query: {health_id:health_id,cycle_id:newcycle_id,order_id:order_id}}" ><p><i class="icon iconfont icon-zhifu"></i>去支付</p><i class="iconfont icon-gengduo"></i></router-link>
+				</li>
+			</ul>
+			<div class="cycleStatus" >
+				<div class="cycleS_l circle" ref="cycleS_l">
+					<p><span :days="data.daysremaining" :care_num="data.care_num">{{data.daysremaining}}/{{data.care_num}}</span><br>天<br>周期天数</p>
+				</div>
+				<div class="cycleS_r">
+					<p>周期名称：<span v-if="data.care_num == 30">巩固期</span><span v-else>调理期</span></p>
+					<p>周期状态：<span v-if="data.status==0">未开始</span><span v-else-if="data.status==1">进行中</span><span v-else-if="data.status==2">已完成</span></p>
+					<p>开始时间：<span v-if="data.start_time==0">未开始</span><span v-else>{{getdate(data.start_time)}}</span></p>
+					<p>结束时间：<span v-if="data.start_time==0">未开始</span><span  v-else>{{getdate(data.end_time)}}</span></p>
+				</div>
+			</div>
+			<ul class="cycleList item-content">
+				<router-link to="" tag="li">
+					<p>
+						<em :class="data.is_tomorrow == 1?'iconfont icon-kaishishijian on':'iconfont icon-kaishishijian'"></em>明日开始
+					</p>
+					<i :class="data.is_tomorrow == 1?'iconfont icon-xia':'iconfont icon-gengduo'"></i>
+					<div v-if="data.is_tomorrow == 1">
+						<span><b class="iconfont icon-zhuyi"></b>是否确认明日开始？</br>请您严格遵守餐单饮食，听从健康教练指导。</span>
+						<button class="blue-btn" @click="istomorrow()">确认调理</button>
+					</div>
+				</router-link>
+				<router-link :to="data.is_show == 1?{path:'/checkups',query:{health_id:health_id,cycle_id:cycle_id}}:''" tag="li"><p><em :class="data.is_show == 1?'iconfont icon-jiancha on':'iconfont icon-jiancha'"></em>周期体检</p><i class="iconfont icon-gengduo"></i></router-link>
+				<router-link :to="data.start_time != 0?{path:'/recipeNav/recipe',query:{health_id:health_id,cycle_id:cycle_id}}:''" tag="li"><p><em :class="data.start_time != 0?'iconfont icon-candan on':'iconfont icon-candan'" ></em>健康餐单</p><i class="iconfont icon-gengduo"></i></router-link>
+				<router-link :to="data.start_time != 0 && data.firstrow != ''?{path:'/journal',query:{health_id:health_id,cycle_id:cycle_id}}:''" tag="li"><p><em :class="data.start_time != 0 && data.firstrow !=''?'iconfont icon-ribao on':'iconfont icon-ribao'"></em>健康日报</p><i class="iconfont icon-gengduo"></i></router-link>
+			</ul>
+		</div>	
 	</div>
 </template>
 
@@ -48,59 +66,230 @@
 	export default {
 		data(){
 			return {
-				start: false
+				http:localStorage.http,
+				start: false,
+				items:[],
+				data:[],
+				msg:[],
+				cycle_id:'',
+				height:'',
+				health_id:'',
+				order_id:'',
+				is_confirm:'',
+				newcycle_id:'',
+				status:'',
+				status_h:''
 			}
 		},
+		created() {
+			if(this.$route.query.health_id != undefined){
+				this.health_id = this.$route.query.health_id
+			}
+			this.myclcye();
+		},
+		beforeDestroy(){
+//			this.myclcye();
+		},
 		mounted(){
-			/*$(".knob").knob({
-				width:110,//宽度
-				thickness:0.2,//厚度按百分几计算
-				fgColor:'#f90',//前景色
-				displayInput:false,//不显示input
-				bgColor:'#e8ecef',//背景色
-				readOnly:false,//只读
-				linecap:'round',
-				inputColor:'#f60', //数字的颜色
-			});*/
-			/*let height = this.$refs.cycleS_l.getBoundingClientRect().height;
-			/*$(".knob").knob({
-				width:height,//宽度
-				// height:height*2.5,
-				thickness:0.2,//厚度按百分几计算
-				fgColor:'#f90',//前景色
-				displayInput:false,//不显示input
-				bgColor:'#e8ecef',//背景色
-				readOnly:false,//只读
-				linecap:'round',
-				inputColor:'#f60', //数字的颜色
-                change : function (value) {
-                    //console.log("change : " + value);
-                },
-                release : function (value) {
-                    //console.log(this.$.attr('value'));
-                    console.log("release : " + value);
-                },
-                cancel : function () {
-                    console.log("cancel : ", this);
-                }
-            });*/
+			var h = $('#app').css('font-size');
+			if(sessionStorage.height != undefined && sessionStorage.height != 'undefined'){
+				this.height = sessionStorage.height;
+			}else {
+				sessionStorage.height = parseInt(h.substr(0,h.length - 2))
+				this.height = sessionStorage.height
+			}
+			let height = this.height;
+			$('.cycleS_l.circle').circleProgress({
+				size: height,
+				value: .74,
+				startAngle: -Math.PI*1.24,
+				// lineCap: 'round',
+				fill: { gradient: ["#5fcdea", "#afa8f5"] },
+				emptyFill: "rgba(0, 0, 0, 0)",
+				thickness: height/33.5
+			})
 		},
 		methods: {
 			Start(e){
 				let el = e.target;
 				this.start = !this.start;
 				this.start ? el.style.borderBottom='0' :el.style.borderBottom='.01rem solid #e5e5e5';
+			},
+			getdate(date) {
+				var date = new Date(date*1000)
+				var Y = date.getFullYear();
+				var M = date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1;
+				var D = date.getDate() < 10 ? '0'+date.getDate() : date.getDate();
+				var H = date.getHours() < 10 ? '0'+date.getHours() : date.getHours();
+				var N = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes();
+				var S = date.getSeconds() < 10 ? '0'+date.getSeconds() : date.getSeconds();
+				return Y+'-'+M+'-'+D;
+			},
+			myclcye(){
+				let url = this.http+'/wechat.php/health/myclcye'
+				this.$http({
+			        method: 'post',
+			        url: url,   
+			        data: this.qs.stringify({
+			         	token:'06cd3b2382f7a92d76f62c21946aaf3c',
+			         	health_id:this.health_id
+			        })
+		        })
+		        .then((res)=>{
+		        	if (res.data.status == 2) {
+		        		this.showDialog(res.data.msg)
+						let timer = setTimeout(() => {
+							this.$router.replace({ path: '/'})
+						}, 2000);
+		        	}else if (res.data.status == 1) {
+		        		this.items=res.data.jumpUrl
+		        		this.data=res.data.data
+		        		this.msg=res.data.msg
+		        		let cyvalue= (res.data.data.daysremaining*74/res.data.data.care_num)/100
+						let height = this.height;
+						this.order_id=res.data.msg.order_id
+						this.cycle_id=res.data.data.id
+						this.newcycle_id=res.data.msg.id
+						this.is_confirm=res.data.msg.is_confirm
+						this.pay_status=res.data.msg.pay_status
+						if(this.$route.query.health_id == undefined || this.$route.query.health_id == '' || this.$route.query.health_id == 'undefined') {
+							this.health_id=res.data.data.health_id
+						}
+//						this.health_id=res.data.data.health_id
+						$('.cycleS_l.circle').circleProgress({
+							size: height,
+							value: cyvalue,
+							startAngle: -Math.PI*1.24,
+							// lineCap: 'round',
+							fill: { gradient: ["#5fcdea", "#afa8f5"] },
+							emptyFill: "rgba(0, 0, 0, 0)",
+							thickness: height/33.5
+						})
+						this.status_h=1
+		        	}else if (res.data.status == 4) { /*请求成功未选择健康方案*/
+		        		this.status = res.data.status
+//		        		this.showDialog('您还没有周期')
+		        		this.is_confirm=res.data.data.is_confirm
+		        	}else if (res.data.status == 3) { /*请求成功未创建档案*/
+		        		this.showDialog('请先建立档案')
+		        		this.$router.replace({path:'/healthindex'})
+		        	}else if (res.data.status == 5) { /*未完善资料*/
+		        		this.showDialog(res.data.msg)
+		        		this.$router.replace({path:'/profile'})
+		        	};
+		        })
+			},
+			getmanresult(event){
+//				let health_id=this.$route.query.health_id
+				let url = this.http+'/wechat.php/health/myclcye'
+				this.$http({
+			        method: 'post',
+			        url: url,   
+			        data: this.qs.stringify({
+			         	token:'06cd3b2382f7a92d76f62c21946aaf3c',
+			         	cycle_id:event.target.value,
+			         	health_id:this.health_id
+			        })
+		        })
+		        .then((res)=>{
+		        	if (res.data.status == 2) {
+		        		this.$router.replace({ path: '/'})
+		        		this.showDialog(res.data.msg)
+		        	}else if (res.data.status == 1) {
+		        		this.items=res.data.jumpUrl
+		        		this.data=res.data.data
+		        		this.cycle_id=res.data.data.id
+//		        		this.health_id=res.data.data.health_id
+		        		let cyvalue= (res.data.data.daysremaining*74/res.data.data.care_num)/100
+						let height = this.height;
+						$('.cycleS_l.circle').circleProgress({
+							size: height,
+							value: cyvalue,
+							startAngle: -Math.PI*1.24,
+							// lineCap: 'round',
+							fill: { gradient: ["#5fcdea", "#afa8f5"] },
+							emptyFill: "rgba(0, 0, 0, 0)",
+							thickness: height/33.5
+						})
+		        		
+		        	}else if (res.data.status == 4) {
+		        		this.showDialog(res.data.msg)
+		        	}else if (res.data.status == 3) {
+		        		this.showDialog(res.data.msg)
+		        	};
+		        })
+			},
+			istomorrow(){
+				let cycle_id=$(".healthcare_select").find("option:selected").val()
+				let url = this.http+'/wechat.php/health/istomorrow'
+				this.$http({
+			        method: 'post',
+			        url: url,   
+			        data: this.qs.stringify({
+			         	token:'06cd3b2382f7a92d76f62c21946aaf3c',
+			         	cycle_id:cycle_id,
+			         	health_id:this.health_id
+			        })
+		        })
+				.then((res)=>{
+					if(res.data.status == 0){
+						this.showDialog(res.data.msg)
+						return
+					}else if (res.data.status == 1) {
+		        		window.location.reload();
+		        }else if (res.data.status == 2) {
+		        		this.$router.replace({ path: '/'});
+		        		this.showDialog(res.data.msg)
+		        	}else if (res.data.status == 3) {
+		        		this.showDialog(res.data.msg)
+		        	};
+		        })
 			}
 		}
 	}
 </script>
 
 <style>
+	[v-cloak]{
+		display: none !important;
+	}
+	#healthcare .logo {
+		margin: 0;
+		background: none;
+		position: inherit;
+		margin-bottom: .2rem;
+	}
+	#app{
+		font-size: 3.35rem;
+	}
+	#healthcare>div {
+		position: absolute;
+		width: 100%;
+		top: .88rem;
+	}
+	#healthcare>div.have_cyc{
+		top: 1.1rem;
+	}
 	#healthcare nav{
-		background: #47cce2;
+		background: #FFFFFF;
 		height: .88rem;
 		color: #fff;
 		position: relative;
+		box-shadow: 0 0 4px #e4e1e1;
+	}
+	#healthcare nav>div{
+		clear: both;
+		overflow: hidden;
+		text-align: center;
+		height: 100%;
+	}
+	#healthcare nav select{
+		color: #999999;
+		font-size: .32rem;
+		margin-top: -.15rem;
+		width: 1.3rem;
+		height: .5rem;
+		/*float: left;*/
 	}
 	#healthcare nav span {
 		display: inline-block;
@@ -108,9 +297,13 @@
 		font-size: .34rem;
 	}
 	#healthcare nav i {
-		transform:rotate(10deg);
+		color: #999999;
+		/*float: left;*/
+		display: inline-block;
+		/*transform:rotate(10deg);*/
 		font-size: .34rem;
 		margin-left: .2rem;
+		margin-top: .3rem;
 	}
 	#healthcare nav ul {
 		height: 0;
@@ -129,31 +322,37 @@
 	}
 	
 	#healthcare>div,#healthcare>ul {
-		background: #fff;
+		/*background: #fff;*/
 		border-top:.01rem solid #e5e5e5;
-		border-bottom:.01rem solid #e5e5e5;
-		margin: .2rem 0;
+		/*border-bottom:.01rem solid #e5e5e5;*/
+		/*margin: .2rem 0;*/
+		border: none;
 	}
 
 	#healthcare .cycleStatus {
 		height: 4.02rem;
+		background: #fff;
+		margin-top: .2rem;
 	}
 	#healthcare .cycleStatus .cycleS_l {
 		float: left;
 		width: 3.35rem;
-		margin: .6rem .3rem 0;
+		margin: .6rem .26rem 0;
 		height: 3.35rem;
-		/*background: url(../../assets/img/progress.png) no-repeat;*/
+		background: url(../../assets/img/progress.png) no-repeat;
 		background-size: contain;
 		position: relative;
 	}
 	#healthcare .cycleStatus .cycleS_l p {
 		position: absolute;
 		top: 36%;
-		left: 25%;
+		left: 23%;
 		line-height: 0.5rem;
 	}
 	#healthcare .cycleStatus .cycleS_l p span {
+		display: block;
+		width: 90px;
+	    text-align: center;
 		color: #47cce2;
 		font-size: .62rem;
 	}
@@ -194,6 +393,7 @@
 		float: left;
 		margin: .75rem .15rem;
 		text-align: left;
+		font-size: 3.35rem;
 	}
 	#healthcare .cycleStatus .cycleS_r p {
 		font-size: .3rem;
@@ -210,41 +410,43 @@
 		font-size: .4rem;
 		margin-right: .2rem;
 	}
-	#healthcare .cycleList li:nth-child(1) p em {
+	#healthcare .cycleList li:nth-child(1) p em.on {
 		color: #fa88a0;
 		font-size: .4rem;
 	}
-	#healthcare .cycleList li:nth-child(2) p em {
+	#healthcare .cycleList li:nth-child(2) p em.on {
 		color: #77ecd7;
 		font-size: .4rem;
 	}
-	#healthcare .cycleList li:nth-child(3) p em {
+	#healthcare .cycleList li:nth-child(3) p em.on {
 		color: #ef9043;
 		font-size: .44rem;
 		margin-right: .16rem;
 	}
-	#healthcare .cycleList li:nth-child(4) p em {
+	#healthcare .cycleList li:nth-child(4) p em.on {
 		color: #8dd6f5;
 		font-size: .39rem;
 	}
 	#healthcare .cycleList li div {
 		clear: both;
-		height: 2.4rem;
+		/*height: 2.4rem;*/
 		background: #efeff4;
 		width: 100%;
 		font-size: .26rem;
 		border-bottom: .01rem solid #e5e5e5;
+		padding: .2rem 0;
 	}
 	#healthcare .cycleList li div span {
 		display: block;
 		padding: .25rem 0 .25rem .6rem;
 		font-size: .26rem;
 		color: #f8726d;
-		width: 78%;
+		width: 88%;
 		line-height: .4rem;
 		margin: 0 auto;
+		text-align: left;
 	}
-	#healthcare .cycleList li div span i {
+	#healthcare .cycleList li div span b {
 		float: left;
 		font-size: 1rem;
 		margin-left:-.7rem;
@@ -261,5 +463,66 @@
 		margin: 0 auto;
 		font-size: .3rem;
 	} 
-
+	.item-content a p{
+		color: #333;
+	}
+	#healthcare .item-content{
+		margin-top: .2rem;
+		border: none;
+		box-shadow: 0 0 4px #e4e1e1;
+	}
+	#healthcare .item-content li{
+		margin: 0 .2rem;
+	}
+	#healthcare .no-cycle{
+		background: #FFFFFF;
+		width: 100%;
+		position: absolute;
+		height:  13rem;
+		margin: 0 auto;
+		padding: 2.3rem 0 1rem 0;
+	}
+	#healthcare .no-cycle img{
+		width:3.13rem;
+		height: 2.04rem;
+		
+	}
+	#healthcare .no-cycle p{
+		color: #B2B2B2;
+		margin-top: .2rem;
+		font-size: .34rem;
+	}
+	#healthcare .continue p .icon-jiankangguanli{
+		font-size: .46rem;
+		margin: 0;
+		color: #47cce2;
+		margin: .02rem .2rem 0 .1rem;
+	}
+	#healthcare .continue p {
+		margin-left: 0;
+	}
+	#healthcare .continue{
+		background: #FBFBFB;
+		position:relative;
+		animation:myfirst 5s;
+		-webkit-animation:myfirst 5s; 
+	}
+	@keyframes myfirst{
+		0%   {background:#FFFFFF;left:0px; top:-70px;}
+		25%  {background:#FBFBFB;left:0px; top:0px;}
+	}
+	@-webkit-keyframes myfirst{
+		0%   {background:#FFFFFF;left:0px; top:0px;}
+		25%  {background:#FBFBFB;left:0px; top:0px;}
+	}
+	#healthcare .continue p .icon-zhifu{
+		font-size: .42rem;
+		margin: 0;
+		color: #FA88A0;
+		margin: .02rem .2rem 0 .1rem;
+	}
+	.Zindex{
+		z-index: 999;
+	}
+	
 </style>

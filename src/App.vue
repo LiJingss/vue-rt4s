@@ -1,5 +1,5 @@
 <template>
-	<div id="app">
+	<div id="app" v-cloak>
 		<router-view v-wechat-title="$route.meta.title"></router-view>
 	</div>
 </template>
@@ -30,6 +30,9 @@ export default Dialog
 </script>
 
 <style>
+[v-cloak] {
+	display: none!important;
+}
 #app {
 	font-family: 'Avenir', Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
